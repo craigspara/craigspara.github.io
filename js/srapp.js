@@ -28,7 +28,7 @@ var srapp = app.srapp || {};
         //app.srapp.cardify();
         srapp.widgets.flexsliderify.init();
         srapp.widgets.featureify.init();
-        srapp.modStretchWide.init();
+        srapp.util.modStretchWide.init();
 
     };
 
@@ -689,103 +689,7 @@ var srapp = app.srapp || {};
 
     // Private functions
 
-    /**
-     * mod-stretchwide function
-     * @private
-     * @function
-     * @description Stretches element classed with .mod-stretchwide the full width of the viewport.
-     */
-    function stretcher (options) {
-        var modWindowWidth = $('body').innerWidth(),
-            modStretchOffset = ( modWindowWidth - options.modInnerWidth ) / ( -2 );
 
-        console.log('modWindowWidth');
-        console.log(modWindowWidth);
-        console.log('modStretchOffset');
-        console.log(modStretchOffset);
-        console.log('options.targetObj.width()');
-        console.log(options.targetObj.width());
-        console.log('------------');
-
-        if( modStretchOffset > 0 ) {
-            modStretchOffset = 0;
-        }
-
-        options.targetObj.width(modWindowWidth).css('margin-left',(modStretchOffset + "px" ));
-    }
-
-
-    /**
-     * @public object
-     * @type {{init: app.srapp.modStretchWide.init}}
-     * @description: Stretches element classed with .mod-stretchwide the full width of the viewport.
-     */
-
-    app.srapp.modStretchWide = {
-
-        defaults: {
-            modSiteWidth: 924
-        },
-
-        init: function () {
-
-            var targets = $('.mod-stretchwide');
-
-            //console.log('targets');
-            //console.log(targets);
-
-            if ( targets.length > 0 ) {
-
-                jQuery.each( targets, function ( i, val ) {
-
-                    var target = $(this),
-                        options = {};
-
-                    //console.log('target');
-                    //console.log(target);
-
-                    // build configs from defaults and settings
-                    srapp.util.configurator.buildConfigs( target, 'mod-stretchwide-options', srapp.modStretchWide );
-
-                    //console.log('configs');
-                    //console.log(srapp.modStretchWide.configs);
-
-                    // set-up options object to pass into stretcher function
-                    options.targetObj = $(target);
-                    options.modInnerWidth = srapp.modStretchWide.configs.modSiteWidth;
-
-                    if ( target.length > 0 ) {
-
-                        jQuery.each( target, function ( i, val ) {
-
-                            //console.log('options');
-                            //console.log(options);
-
-                            stretcher(options);
-
-                            // Re-run on window resize
-                            $(window).resize(function(){
-
-                                console.log('resize event fired');
-                                stretcher(options);
-                            });
-                        });
-                    }
-                });
-            }
-            /**
-             *
-             * @type {{modWindowWidth: *, modStretchTarget: (*|HTMLElement)}}
-             */
-            cached = {
-                //modWindowWidth: $('body').innerWidth(),
-                //modStretchTarget: $('.mod-stretchwide')
-            };
-
-
-
-        }
-    };
 
 })(window.app.srapp = window.app.srapp || {}, jQuery);
 
@@ -891,6 +795,86 @@ var srapp = app.srapp || {};
             return callerObject.configs
         }
 
+    };
+
+    /**
+     * @name stretcher
+     * @private
+     * @function
+     * @description Stretches element classed with .mod-stretchwide the full width of the viewport.
+     * @param options {object} - contains the target, and config values
+     */
+
+    function stretcher (options) {
+        var modWindowWidth = $('body').innerWidth(),
+            modStretchOffset = ( modWindowWidth - options.modInnerWidth ) / ( -2 );
+
+        if( modStretchOffset > 0 ) {
+            modStretchOffset = 0;
+        }
+
+        options.targetObj.width(modWindowWidth).css('margin-left',(modStretchOffset + "px" ));
+    }
+
+
+    /**
+     * @public object
+     * @type {{defaults: {modSiteWidth: number}, init: Function}}
+     * @description: Stretches element classed with .mod-stretchwide the full width of the viewport.
+     */
+    srapp.util.modStretchWide = {
+
+        defaults: {
+            modSiteWidth: 924
+        },
+
+        init: function () {
+
+            var targets = $('.mod-stretchwide');
+
+            if ( targets.length > 0 ) {
+
+                jQuery.each( targets, function ( i, val ) {
+
+                    var target = $(this),
+                        options = {};
+
+                    // build configs from defaults and settings
+                    srapp.util.configurator.buildConfigs( target, 'mod-stretchwide-options', srapp.util.modStretchWide );
+
+
+                    // set-up options object to pass into stretcher function
+                    options.targetObj = $(target);
+                    options.modInnerWidth = srapp.util.modStretchWide.configs.modSiteWidth;
+
+                    if ( target.length > 0 ) {
+
+                        jQuery.each( target, function ( i, val ) {
+
+                            stretcher(options);
+
+                            // Re-run on window resize
+                            $(window).resize(function(){
+
+                                console.log('resize event fired');
+                                stretcher(options);
+                            });
+                        });
+                    }
+                });
+            }
+            /**
+             *
+             * @type {{modWindowWidth: *, modStretchTarget: (*|HTMLElement)}}
+             */
+            cached = {
+                //modWindowWidth: $('body').innerWidth(),
+                //modStretchTarget: $('.mod-stretchwide')
+            };
+
+
+
+        }
     };
 
     //TODO: Refactor for incorporation into util module
