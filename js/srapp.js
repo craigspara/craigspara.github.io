@@ -28,7 +28,7 @@ var srapp = app.srapp || {};
         //app.srapp.cardify();
         srapp.widgets.flexsliderify.init();
         srapp.widgets.featureify.init();
-        //app.modStretchWide.init();
+        srapp.modStretchWide.init();
 
     };
 
@@ -324,8 +324,8 @@ var srapp = app.srapp || {};
      * @name setFirstFeatureItem
      * @description function called by init to copy first slide into the feature-wrapper.
      * @private
-     * @param {object} source : contains indexed array-like object of feature-items
-     * @param {object} destination : container for feature-item
+     * @param {object} source - contains indexed array-like object of feature-items
+     * @param {object} destination - container for feature-item
      */
     function setFirstFeatureItem( source, destination ) {
 
@@ -340,8 +340,8 @@ var srapp = app.srapp || {};
      * @name swapFeaturedItem
      * @description Event driven function to copy triggered featured-item html fragment into the feature-wrapper.
      * @private
-     * @param {object} snippet : contains indexed array-like object of feature-items
-     * @param {object} destination : container for feature-item
+     * @param {object} snippet - contains indexed array-like object of feature-items
+     * @param {object} destination - container for feature-item
      */
     function swapFeatureItem ( snippet, destination ) {
 
@@ -353,7 +353,7 @@ var srapp = app.srapp || {};
      * @name setFeatureItemActiveClass
      * @description
      * @param {object} source : contains indexed array-like object of feature-items
-     * @param {object} snippet : active individual LI element .featureify-item
+     * @param {object} snippet - active individual LI element .featureify-item
      */
     function setFeatureItemActiveClass ( source, snippet ) {
 
@@ -683,58 +683,109 @@ var srapp = app.srapp || {};
 
 (function (srapp, $) {
 
-//    "use strict";
-//
-//    var cached = {};
-//
-//    // Private functions
-//
-//    /**
-//     * mod-stretchwide function
-//     * @private
-//     * @function
-//     * @description Stretches element classed with .mod-stretchwide the full width of the viewport.
-//     */
-//    function stretcher () {
-//        var modInnerWidth = 920,
-//            modStretchOffset = ( cached.modWindowWidth - modInnerWidth ) / ( -2 );
-//
-//        if( modStretchOffset > 0 ) {
-//            modStretchOffset = 0;
-//        }
-//
-//        cached.modStretchTarget.width(cached.modWindowWidth).css('margin-left',(modStretchOffset + "px" ));
-//    }
-//
-//
-//    /**
-//     * @public object
-//     * @type {{init: app.srapp.modStretchWide.init}}
-//     * @description: Stretches element classed with .mod-stretchwide the full width of the viewport.
-//     */
-//
-//    app.srapp.modStretchWide = {
-//
-//        init: function () {
-//
-//            /**
-//             *
-//             * @type {{modWindowWidth: *, modStretchTarget: (*|HTMLElement)}}
-//             */
-//            cached = {
-//                modWindowWidth: $('body').innerWidth(),
-//                modStretchTarget: $('.mod-stretchwide')
-//            };
-//
-//            stretcher();
-//
-//            // Re-run on window resize
-//            $(window).resize(function(){
-//                stretcher();
-//            });
-//
-//        }
-//    };
+    "use strict";
+
+    var cached = {};
+
+    // Private functions
+
+    /**
+     * mod-stretchwide function
+     * @private
+     * @function
+     * @description Stretches element classed with .mod-stretchwide the full width of the viewport.
+     */
+    function stretcher (options) {
+        var modWindowWidth = $('body').innerWidth(),
+            modStretchOffset = ( modWindowWidth - options.modInnerWidth ) / ( -2 );
+
+        console.log('modWindowWidth');
+        console.log(modWindowWidth);
+        console.log('modStretchOffset');
+        console.log(modStretchOffset);
+        console.log('options.targetObj.width()');
+        console.log(options.targetObj.width());
+        console.log('------------');
+
+        if( modStretchOffset > 0 ) {
+            modStretchOffset = 0;
+        }
+
+        options.targetObj.width(modWindowWidth).css('margin-left',(modStretchOffset + "px" ));
+    }
+
+
+    /**
+     * @public object
+     * @type {{init: app.srapp.modStretchWide.init}}
+     * @description: Stretches element classed with .mod-stretchwide the full width of the viewport.
+     */
+
+    app.srapp.modStretchWide = {
+
+        defaults: {
+            modSiteWidth: 924
+        },
+
+        init: function () {
+
+            var targets = $('.mod-stretchwide');
+
+            //console.log('targets');
+            //console.log(targets);
+
+            if ( targets.length > 0 ) {
+
+                jQuery.each( targets, function ( i, val ) {
+
+                    var target = $(this),
+                        options = {};
+
+                    //console.log('target');
+                    //console.log(target);
+
+                    // build configs from defaults and settings
+                    srapp.util.configurator.buildConfigs( target, 'mod-stretchwide-options', srapp.modStretchWide );
+
+                    //console.log('configs');
+                    //console.log(srapp.modStretchWide.configs);
+
+                    // set-up options object to pass into stretcher function
+                    options.targetObj = $(target);
+                    options.modInnerWidth = srapp.modStretchWide.configs.modSiteWidth;
+
+                    if ( target.length > 0 ) {
+
+                        jQuery.each( target, function ( i, val ) {
+
+                            //console.log('options');
+                            //console.log(options);
+
+                            stretcher(options);
+
+                            // Re-run on window resize
+                            $(window).resize(function(){
+
+                                console.log('resize event fired');
+                                stretcher(options);
+                            });
+                        });
+                    }
+                });
+            }
+            /**
+             *
+             * @type {{modWindowWidth: *, modStretchTarget: (*|HTMLElement)}}
+             */
+            cached = {
+                //modWindowWidth: $('body').innerWidth(),
+                //modStretchTarget: $('.mod-stretchwide')
+            };
+
+
+
+        }
+    };
 
 })(window.app.srapp = window.app.srapp || {}, jQuery);
 
