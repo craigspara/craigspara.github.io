@@ -7,7 +7,7 @@ var srapp = app.srapp || {};
 /**
  *
  */
-(function(srapp, $) {
+(function (srapp, $) {
     "use strict";
 
     /*
@@ -20,7 +20,7 @@ var srapp = app.srapp || {};
     /**
      *
      */
-    srapp.init = function() {
+    srapp.init = function () {
         srapp.widgets.accordionify.init();
         //srapp.widgets.shoppify.init();
         srapp.widgets.animateify.init();
@@ -56,7 +56,7 @@ var srapp = app.srapp || {};
      * @param target
      * @param classname
      */
-    function accorToggle( target, classname ) {
+    function accorToggle(target, classname) {
 
         target.toggleClass(classname);
 
@@ -87,57 +87,57 @@ var srapp = app.srapp || {};
 
             var targets = $('.accordionify'); // collection of all instance of the accordionify widget on a page
 
-            if ( targets.length > 0 ) {
+            if (targets.length > 0) {
 
                 // enumerate over all instances of .accordionify
-                jQuery.each( targets, function ( i, val ) {
+                jQuery.each(targets, function (i, val) {
 
                     var target = $(this), // the specific instance of the widget to be manipulated
                         accordions = {},
                         trigger = {};
 
                     // build configs from defaults and settings
-                    srapp.util.configurator.buildConfigs( target, 'accor-options', srapp.widgets.accordionify );
+                    srapp.util.configurator.buildConfigs(target, 'accor-options', srapp.widgets.accordionify);
 
-                    if ( target.length > 0 ) {
+                    if (target.length > 0) {
 
                         // enumerate over each specific instance of .accordionify
-                        jQuery.each( target, function( i, val ) {
+                        jQuery.each(target, function(i, val) {
 
-                            accordions = $(this).find( '.' + srapp.widgets.accordionify.configs.accorWrapper );
+                            accordions = $(this).find('.' + srapp.widgets.accordionify.configs.accorWrapper);
 
                             // enumerate over each accorWrapper within a specific instance of .accordionify
 
-                            jQuery.each( accordions, function( i, val ) {
+                            jQuery.each(accordions, function(i, val) {
 
                                 var accordion = $(this);
 
-                                if ( srapp.widgets.accordionify.configs.accorButton === true ) {
+                                if (srapp.widgets.accordionify.configs.accorButton === true) {
 
-                                    accordion.prepend( '<div class="accor-button ' + srapp.widgets.accordionify.configs.accorTrigger + '">+</div>' );
+                                    accordion.prepend('<div class="accor-button ' + srapp.widgets.accordionify.configs.accorTrigger + '">+</div>');
 
                                 }
 
 
-                                if ( srapp.widgets.accordionify.configs.accorTrigger !== undefined ) {
+                                if (srapp.widgets.accordionify.configs.accorTrigger !== undefined) {
 
-                                    trigger = accordion.find( '.' + srapp.widgets.accordionify.configs.accorTrigger );
+                                    trigger = accordion.find('.' + srapp.widgets.accordionify.configs.accorTrigger);
 
                                 }
 
 
                                 // Adds classes
 
-                                accordion.addClass( 'accor-source' );
+                                accordion.addClass('accor-source');
 
-                                accordion.find( '.' + srapp.widgets.accordionify.configs.accorHeader ).addClass( 'accor-header' );
+                                accordion.find('.' + srapp.widgets.accordionify.configs.accorHeader).addClass('accor-header');
 
-                                accordion.find( '.' + srapp.widgets.accordionify.configs.accorContent ).addClass( 'accor-content' );
+                                accordion.find('.' + srapp.widgets.accordionify.configs.accorContent).addClass('accor-content');
 
-                                trigger.on( 'click', function (el) {
+                                trigger.on('click', function (el) {
 
                                     // trigger toggle to add .accorOpened class to accorContent and AccorButton
-                                    accorToggle( accordion, 'accor-opened' );
+                                    accorToggle(accordion, 'accor-opened');
 
                                 });
 
@@ -161,11 +161,11 @@ var srapp = app.srapp || {};
      * @param message
      * @returns {*}
      */
-    function animateifyException( value, message ) {
+    function animateifyException(value, message) {
         this.value = value;
         this.message = message;
 
-        return console.log( 'animateify exception thrown: "' + value + '" ' + message );
+        console.log('animateify exception thrown: "' + value + '" ' + message);
 
     }
 
@@ -189,9 +189,9 @@ var srapp = app.srapp || {};
          * @name Play
          * @description
          * @public
-         * @param {array} animationFrames - an array of all the individual frames for the animation. Frames can be containers of elements or a single element.
+         * @param {object} animationFrames - an array of all the individual frames for the animation. Frames can be containers of elements or a single element.
          */
-        play: function ( animationFrames ) {
+        play: function (animationFrames) {
 
             var frameCount = animationFrames.length,
                 frameSpeed = srapp.widgets.animateify.configs.animateifyAnimationSpeed,
@@ -201,7 +201,7 @@ var srapp = app.srapp || {};
                 nextFrameNum,
                 animation;
 
-            if ( $(animationFrames[0]).hasClass( 'animateify-current-frame' ) !== true ) {
+            if ($(animationFrames[0]).hasClass( 'animateify-current-frame') !== true) {
 
                 animationDirection = 'backward';
                 frameIndex = frameCount - 1;
@@ -213,52 +213,51 @@ var srapp = app.srapp || {};
 
             }
 
-            switch ( animationDirection ) {
-             case 'backward':
+            switch (animationDirection) {
+            case 'backward':
 
-                 animation = setInterval( function() {
+                animation = setInterval(function () {
 
-                     prevFrameNum = ( frameIndex%frameCount + ( frameCount - 1 ) )%frameCount;
+                    prevFrameNum = (frameIndex % frameCount + (frameCount - 1)) % frameCount;
+                    $(animationFrames[prevFrameNum]).addClass('animateify-current-frame');
+                    $(animationFrames[frameIndex]).removeClass('animateify-current-frame');
 
-                     $( animationFrames[prevFrameNum] ).addClass( 'animateify-current-frame' );
-                     $( animationFrames[frameIndex] ).removeClass( 'animateify-current-frame' );
+                    if (prevFrameNum === 0) {
 
-                     if ( prevFrameNum === 0 ) {
+                    clearInterval(animation);
+                    return;
+                    }
 
-                         clearInterval(animation);
-                         return;
-                     }
+                    frameIndex -= 1;
 
-                     frameIndex -= 1;
-
-                 }, frameSpeed);
-
-                break;
-             case 'forward':
-
-                 animation = setInterval( function() {
-
-                     nextFrameNum = ( frameIndex%frameCount + ( frameCount + 1 ) )%frameCount;
-
-                     $( animationFrames[nextFrameNum] ).addClass( 'animateify-current-frame' );
-                     $( animationFrames[frameIndex] ).removeClass( 'animateify-current-frame' );
-
-                     if ( nextFrameNum === frameCount - 1 ) {
-
-                         clearInterval(animation);
-                        return
-                     }
-
-                     frameIndex += 1;
-
-                 }, frameSpeed);
+                }, frameSpeed);
 
                 break;
-             default:
+            case 'forward':
 
-                    console.log('error with animation direction');
+                animation = setInterval(function () {
 
-             }
+                 nextFrameNum = ( frameIndex%frameCount + ( frameCount + 1 ) )%frameCount;
+
+                 $( animationFrames[nextFrameNum] ).addClass( 'animateify-current-frame' );
+                 $( animationFrames[frameIndex] ).removeClass( 'animateify-current-frame' );
+
+                 if ( nextFrameNum === frameCount - 1 ) {
+
+                     clearInterval(animation);
+                    return
+                 }
+
+                 frameIndex += 1;
+
+             }, frameSpeed);
+
+            break;
+            default:
+
+                console.log('error with animation direction');
+
+            }
 
         },
 
@@ -271,7 +270,7 @@ var srapp = app.srapp || {};
             if ( targets.length > 0 ) {
 
                 // enumerate over all instances of .animateify
-                jQuery.each( targets, function ( i, val ) {
+                jQuery.each( targets, function (i, val) {
 
                     var target = $(this), // the specific instance of the widget to be manipulated
                         animationFramesWrapper = {},
@@ -281,36 +280,36 @@ var srapp = app.srapp || {};
 
 
                     // build configs from defaults and settings
-                    srapp.util.configurator.buildConfigs( target, 'animateify-options', app.srapp.widgets.animateify );
+                    srapp.util.configurator.buildConfigs(target, 'animateify-options', app.srapp.widgets.animateify);
 
 
                     // Update vars with configs values
-                    animationFramesWrapper = target.find( '.' + srapp.widgets.animateify.configs.animateifyFrameWrapper );
+                    animationFramesWrapper = target.find('.' + srapp.widgets.animateify.configs.animateifyFrameWrapper);
 
                     // collect all animation frames into an array and store array length
                     animationFrames = animationFramesWrapper.children().toArray();
                     animationFramesLength = animationFrames.length;
 
                     // Find animation trigger
-                    animationTrigger = target.find( '.' + srapp.widgets.animateify.configs.animateifyTrigger );
+                    animationTrigger = target.find('.' + srapp.widgets.animateify.configs.animateifyTrigger);
 
 
                     //Set required classes
-                    animationFramesWrapper.addClass( 'animateify-frame-wrapper clearfix' );
+                    animationFramesWrapper.addClass('animateify-frame-wrapper clearfix');
 
-                    for ( var j = 0; j < animationFramesLength; j += 1 ) {
+                    for (var j = 0; j < animationFramesLength; j += 1) {
 
                         // For each animation frame
-                        $(animationFrames[j]).addClass( 'animateify-frame' );
+                        $(animationFrames[j]).addClass('animateify-frame');
 
                         // For currently active frame
-                        $(animationFrames[0]).addClass( 'animateify-current-frame' );
+                        $(animationFrames[0]).addClass('animateify-current-frame');
                     }
 
                     // Add event to trigger animation
                     animationTrigger.on( 'click', function(el) {
 
-                        srapp.widgets.animateify.play( animationFrames );
+                        srapp.widgets.animateify.play(animationFrames);
 
                     });
 
@@ -327,13 +326,13 @@ var srapp = app.srapp || {};
      * @param {object} source - contains indexed array-like object of feature-items
      * @param {object} destination - container for feature-item
      */
-    function setFirstFeatureItem( source, destination ) {
+    function setFirstFeatureItem(source, destination) {
 
         // Filter cloned slides from flexslider (if present)
         var snippet = source.not('.clone').first();
 
-        swapFeatureItem ( snippet, destination );
-        setFeatureItemActiveClass( source, snippet );
+        swapFeatureItem (snippet, destination);
+        setFeatureItemActiveClass(source, snippet);
     }
 
     /**
@@ -343,7 +342,7 @@ var srapp = app.srapp || {};
      * @param {object} snippet - contains indexed array-like object of feature-items
      * @param {object} destination - container for feature-item
      */
-    function swapFeatureItem ( snippet, destination ) {
+    function swapFeatureItem(snippet, destination) {
 
         destination.html(snippet.html());
 
@@ -355,13 +354,13 @@ var srapp = app.srapp || {};
      * @param {object} source : contains indexed array-like object of feature-items
      * @param {object} snippet - active individual LI element .featureify-item
      */
-    function setFeatureItemActiveClass ( source, snippet ) {
+    function setFeatureItemActiveClass(source, snippet) {
 
         if ( snippet.hasClass('featureify-item-active') !== true ) {
 
             // Remove any existing instances of 'featured-item-active' class in this list of featured items
             jQuery.each(source, function() {
-                if ( $(this).hasClass('featureify-item-active') === true ) {
+                if ($(this).hasClass('featureify-item-active') === true) {
                     $(this).removeClass('featureify-item-active');
                 }
             });
@@ -410,7 +409,7 @@ var srapp = app.srapp || {};
                         destination = {}; // The container that the featured item will be rendered
 
                     // Get data- values for this instance and parse string to return an object
-                    srapp.util.configurator.buildConfigs( target, 'featureify-options', srapp.widgets.featureify );
+                    srapp.util.configurator.buildConfigs(target, 'featureify-options', srapp.widgets.featureify);
 
                     // update vars with values from config
                     source = target.find('.' + srapp.widgets.featureify.configs.source);
@@ -419,20 +418,20 @@ var srapp = app.srapp || {};
 
 
                     // copies first feature item into destination
-                    setFirstFeatureItem( source, destination );
+                    setFirstFeatureItem(source, destination);
 
                     // Attach event related functions to each source item
                     source.on('click', function(el) {
 
                         snippet = $(this);
 
-                        swapFeatureItem( snippet, destination );
-                        setFeatureItemActiveClass( source, snippet );
+                        swapFeatureItem(snippet, destination);
+                        setFeatureItemActiveClass(source, snippet);
 
                         // featureToTop call
-                        if ( srapp.widgets.featureify.configs.featureToTop === true && srapp.widgets.featureify.configs.destination !== undefined ) {
+                        if (srapp.widgets.featureify.configs.featureToTop === true && srapp.widgets.featureify.configs.destination !== undefined) {
 
-                            srapp.util.featureToTop.execute( {target: $(destination), notebookOffset: 90} );
+                            srapp.util.featureToTop.execute({target: $(destination), notebookOffset: 90});
 
                         }
                         /*else {
@@ -465,18 +464,18 @@ var srapp = app.srapp || {};
      * @param moreText The trigger element's consumer facing message to show more. Uses value from app.resources.READ_MORE_LINK_TEXT by default
      * @param lessText The trigger element's consumer facing message to show less text. Uses value from app.resources.READ_LESS_LINK_TEXT by default
      */
-    function toggleRevealer( firstText, moreText, lessText ) {
+    function toggleRevealer(firstText, moreText, lessText) {
 
-        var triggerTextWrapper = firstText.find( 'a' ),
+        var triggerTextWrapper = firstText.find('a'),
             triggerText = triggerTextWrapper.text();
 
-        if ( triggerText === moreText ) {
+        if (triggerText === moreText) {
 
-            triggerTextWrapper.text( lessText );
+            triggerTextWrapper.text(lessText);
 
         } else {
 
-            triggerTextWrapper.text( moreText );
+            triggerTextWrapper.text(moreText);
         }
     }
 
@@ -492,7 +491,7 @@ var srapp = app.srapp || {};
 
         init: function() {
 
-            var targets = $( '.revealer' );
+            var targets = $('.revealer');
 
             // Before building configs, get site-wide values from app.resources and add them to defaults
             srapp.widgets.revealer.defaults.revealMoreLinkText = app.resources.READ_MORE_LINK_TEXT;
@@ -502,7 +501,7 @@ var srapp = app.srapp || {};
             if ( targets.length > 0 ) {
 
                 // iterate through targets to specific target, revealer, instance
-                jQuery.each( targets, function( i, val ) {
+                jQuery.each(targets, function(i, val) {
 
                     var target = $(this),
                         trigger = {},
@@ -512,29 +511,29 @@ var srapp = app.srapp || {};
                         lessText = "";
 
                     // Build configs from defaults and data-revealer-options
-                    srapp.util.configurator.buildConfigs( target, 'revealer-options', srapp.widgets.revealer );
+                    srapp.util.configurator.buildConfigs(target, 'revealer-options', srapp.widgets.revealer);
 
                     // assign values to vars based on configs
-                    hiddenTextBlock = target.find( '.' + srapp.widgets.revealer.configs.hiddenTextClass );
+                    hiddenTextBlock = target.find('.' + srapp.widgets.revealer.configs.hiddenTextClass);
 
-                    firstText = target.find( srapp.widgets.revealer.configs.firstTextLine );
+                    firstText = target.find(srapp.widgets.revealer.configs.firstTextLine);
 
                     moreText = srapp.widgets.revealer.configs.revealMoreLinkText;
                     lessText = srapp.widgets.revealer.configs.revealLessLinkText;
 
                     // initial setup tasks
-                    if ( target.length > 0 && hiddenTextBlock.length > 0 ) {
+                    if (target.length > 0 && hiddenTextBlock.length > 0) {
 
-                        hiddenTextBlock.addClass( 'unrevealed' );
+                        hiddenTextBlock.addClass('unrevealed');
 
                         // Add trigger to DOM
-                        firstText.append( '<a class="' + srapp.widgets.revealer.configs.revealMoreLinkClass + '" href="">' + srapp.widgets.revealer.configs.revealMoreLinkText + '</a>' );
+                        firstText.append('<a class="' + srapp.widgets.revealer.configs.revealMoreLinkClass + '" href="">' + srapp.widgets.revealer.configs.revealMoreLinkText + '</a>');
 
-                        trigger = target.find( '.' + srapp.widgets.revealer.configs.revealMoreLinkClass );
+                        trigger = target.find('.' + srapp.widgets.revealer.configs.revealMoreLinkClass);
 
                         // Add event handler
-                        if ( trigger.length > 0 ) {
-                            $( trigger ).on( 'click', function(el) {
+                        if (trigger.length > 0) {
+                            $(trigger).on('click', function(el) {
 
                                 el.preventDefault();
 
@@ -597,7 +596,7 @@ var srapp = app.srapp || {};
                     // Init slider with variables
                     if (target.length > 0) {
 
-                        srapp.util.configurator.buildConfigs( target, 'flexsliderify-options', srapp.widgets.flexsliderify);
+                        srapp.util.configurator.buildConfigs(target, 'flexsliderify-options', srapp.widgets.flexsliderify);
 
                         target.flexslider(srapp.widgets.flexsliderify.configs);
 
@@ -705,7 +704,7 @@ var srapp = app.srapp || {};
     srapp.util = {};
 
 
-    function featureToTopException( value, message ) {
+    function featureToTopException(value, message) {
         this.value = value;
         this.message = message;
 
@@ -726,7 +725,7 @@ var srapp = app.srapp || {};
             notebookOffset: 290
         },
 
-        execute: function ( options ) {
+        execute: function (options) {
 
             var settings = options,
                 configs = {};
@@ -738,9 +737,9 @@ var srapp = app.srapp || {};
 
 
             //Customize top offset based on mobile template or not mobile. Non-mobile templates have a persistent header that needs to be accommodated.
-            if ( configs.target !== undefined) {
+            if (configs.target !== undefined) {
 
-                if ( app.hasOwnProperty('isMobileUserAgent') && app.isMobileUserAgent !== true ) {
+                if (app.hasOwnProperty('isMobileUserAgent') && app.isMobileUserAgent !== true) {
 
                     $('html, body').animate({ scrollTop: configs.target.offset().top -= configs.notebookOffset}, 700, 'easeOutQuart');
 
@@ -754,7 +753,7 @@ var srapp = app.srapp || {};
                     throw featureToTopException;
                 }
                 catch(e) {
-                    if ( configs.target === undefined ) {
+                    if (configs.target === undefined) {
                      new featureToTopException( 'undefined', 'featureToTop has thrown the error' );
 
                     }
@@ -784,7 +783,7 @@ var srapp = app.srapp || {};
         buildConfigs: function (target, dataAttrName, callerObject) {
 
             // Get data- values for this instance and parse string to return an object
-            if ( target.data.length > 0 ) {
+            if (target.data.length > 0) {
                 callerObject.settings = jQuery.parseJSON(target.data(dataAttrName));
             }
 
@@ -792,7 +791,7 @@ var srapp = app.srapp || {};
             // Create new extended object that uses either default values or the values from the data- configs object
             callerObject.configs = $.extend({}, callerObject.defaults, callerObject.settings);
 
-            return callerObject.configs
+            return callerObject.configs;
         }
 
     };
@@ -807,9 +806,15 @@ var srapp = app.srapp || {};
 
     function stretcher (options) {
         var modWindowWidth = $('body').innerWidth(),
-            modStretchOffset = ( modWindowWidth - options.modInnerWidth ) / ( -2 );
+            modStretchOffset = 0;
 
-        if( modStretchOffset > 0 ) {
+        if ( app.isMobileUserAgent !== true ) {
+            modStretchOffset = (modWindowWidth - options.modInnerWidthNotebook) / (-2);
+        } else {
+            modStretchOffset = (modWindowWidth - options.modInnerWidthMobile) / (-2);
+        }
+
+        if (modStretchOffset > 0) {
             modStretchOffset = 0;
         }
 
@@ -825,31 +830,33 @@ var srapp = app.srapp || {};
     srapp.util.modStretchWide = {
 
         defaults: {
-            modSiteWidth: 924
+            modSiteWidthMobile: 321,
+            modSiteWidthNotebook: 924
         },
 
         init: function () {
 
             var targets = $('.mod-stretchwide');
 
-            if ( targets.length > 0 ) {
+            if (targets.length > 0) {
 
-                jQuery.each( targets, function ( i, val ) {
+                jQuery.each(targets, function (i, val) {
 
                     var target = $(this),
                         options = {};
 
                     // build configs from defaults and settings
-                    srapp.util.configurator.buildConfigs( target, 'mod-stretchwide-options', srapp.util.modStretchWide );
+                    srapp.util.configurator.buildConfigs(target, 'mod-stretchwide-options', srapp.util.modStretchWide);
 
 
                     // set-up options object to pass into stretcher function
                     options.targetObj = $(target);
-                    options.modInnerWidth = srapp.util.modStretchWide.configs.modSiteWidth;
+                    options.modInnerWidthMobile = srapp.util.modStretchWide.configs.modSiteWidthMobile;
+                    options.modInnerWidthNotebook = srapp.util.modStretchWide.configs.modSiteWidthNotebook;
 
-                    if ( target.length > 0 ) {
+                    if (target.length > 0) {
 
-                        jQuery.each( target, function ( i, val ) {
+                        jQuery.each(target, function (i, val) {
 
                             stretcher(options);
 
@@ -932,5 +939,4 @@ var srapp = app.srapp || {};
 
 $(document).ready(function() {
     app.srapp.init();
-
 });
