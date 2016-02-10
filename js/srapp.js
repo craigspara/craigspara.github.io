@@ -10,22 +10,14 @@ var srapp = app.srapp || {};
 (function (srapp, $) {
     "use strict";
 
-    /*
-        A dev tool to see what has happened on the page.
-        to include a function in object declare a new property at the top of the function set to an empty array the when function is initialized
-        push to that property with the info you want included.
-    */
-    //srapp.pageRepository = {};
 
     /**
      *
      */
     srapp.init = function () {
         srapp.widgets.accordionify.init();
-        //srapp.widgets.shoppify.init();
         srapp.widgets.animateify.init();
         srapp.widgets.revealer.init();
-        //app.srapp.cardify();
         srapp.widgets.flexsliderify.init();
         srapp.widgets.featureify.init();
         srapp.util.modStretchWide.init();
@@ -34,17 +26,9 @@ var srapp = app.srapp || {};
 
 })( window.app.srapp = window.app.srapp || {}, jQuery);
 
-/* OLD:
- accordionify
- Loops through page elements with the class 'accordionify' and creates accordioned elements from its child nodes.
-
- REQUIREMENTS:
- A set of data attributes included on accordionify classed nodes, listed below. Please include full selector.
- - data-accorwrapper: the element that contains a single accordion
- - data-accortrigger: the trigger for the accordion
- - data-accorheader: the intial-state displayed content for the accordion
- - data-accorcontent: the initial-state hidden content for the accordion
- - data-accorbutton: a boolean to toggle the addition of a button to trigger the accordion
+/**
+ * @name widgets
+ * @module
  */
 (function (app, srapp, $) {
     "use strict";
@@ -434,21 +418,6 @@ var srapp = app.srapp || {};
                             srapp.util.featureToTop.execute({target: $(destination), notebookOffset: 90});
 
                         }
-                        /*else {
-                            try {
-                                throw featureItemException;
-                            }
-                            catch(e) {
-                                if ( srapp.widgets.featureify.configs.featureToTop === false ) {
-                                    new featureItemException( 'false', 'featureToTop truth test returned.' );
-                                    console.log(e);
-                                }
-                                if ( srapp.widgets.featureify.configs.destination === undefined ) {
-                                    new featureItemException( 'undefined', 'featureToTop  test returned.' );
-                                    console.log(e);
-                                }
-                            }
-                        }*/
 
                     });
                 });
@@ -609,89 +578,6 @@ var srapp = app.srapp || {};
     };
 
 })( window.app = window.app || {}, window.app.srapp = window.app.srapp || {}, jQuery );
-
-
-/*
- cardify
- Loops through page elements with the class 'cardify' and creates a set of expandable cards from each child element.
-
- REQUIREMENTS:
- This assumes the following structure on the divs.
- Container class="cardify":
- Card Container div:
- Initially visible Content Container div
- Content visible on hover Container div
- */
-/*(function (srapp, $) {
-    //"use strict";
-    app.srapp.cardify = function() {
-        var decks = [],
-            deckCounter = 0,
-            cardCounter = 0,
-            isOldie = $('html').hasClass('oldie'); //A little unusual since it's depedent on a feature of the stride rite website...
-        $('.cardify').each(function() {
-            deckCounter += 1;
-            var theDeck = $(this);
-            theDeck.children().each(function() {
-                cardCounter += 1;
-                $(this).addClass('cardifyCard');
-                $(this).attr('id', 'dId' + deckCounter + 'cId' + cardCounter);
-            });
-            theDeck.data('deck-info', {id: deckCounter, cardcount: cardCounter});
-            decks.push(theDeck);
-            cardCounter = 0;
-        });
-        for (var i = 0; i < decks.length; i++) {
-            var theDeck = decks[i],
-                cards = theDeck.children('.cardifyCard'),
-                cardsCount = theDeck.data('deck-info').cardcount;
-
-            cards.css('width', function() {
-                if (cardsCount > 5)
-                {
-                    return '20%';
-                } else {
-                    return (100 / cardsCount) + '%';
-                }
-            });
-            if (!isOldie)
-            {
-                var ziCounter = cardsCount * 2;
-                cards.each(function()
-                {
-                    var theCard = $(this);
-                    theCard.children().first().css('z-index', ziCounter);
-                    ziCounter -= 1;
-                    theCard.children().first().next().css('z-index', ziCounter);
-                    ziCounter -= 1;
-                    theCard.addClass('cardAnimated');
-                });
-            }
-        }
-        $('.cardifyCard.cardAnimated').hover(function() {
-
-            $(this).toggleClass('cardActive');
-
-        });
-
-        app.srapp.pageRepository.cardifies = decks;
-    };
-
-})(window.app.srapp = window.app.srapp || {}, jQuery);*/
-
-
-(function (srapp, $) {
-
-    "use strict";
-
-    var cached = {};
-
-    // Private functions
-
-
-
-})(window.app.srapp = window.app.srapp || {}, jQuery);
-
 
 
 /**
@@ -863,24 +749,12 @@ var srapp = app.srapp || {};
                             // Re-run on window resize
                             $(window).resize(function(){
 
-                                console.log('resize event fired');
                                 stretcher(options);
                             });
                         });
                     }
                 });
             }
-            /**
-             *
-             * @type {{modWindowWidth: *, modStretchTarget: (*|HTMLElement)}}
-             */
-            cached = {
-                //modWindowWidth: $('body').innerWidth(),
-                //modStretchTarget: $('.mod-stretchwide')
-            };
-
-
-
         }
     };
 
@@ -897,45 +771,6 @@ var srapp = app.srapp || {};
 })(window.app.srapp = window.app.srapp || {}, jQuery);
 
 
-/** Effects module */
-(function (srapp, $) {
-    "use strict";
-
-    var cached = {};
-    srapp.effects = {};
-
-
-
-//TODO: Refactor and incorparate into effects module
-// animates targeted elememnts with liftAnimate style
-    (function () {
-        "use strict";
-
-        // Set CSS class to target and class names to toggle
-        var classOne = 'liftAnimate',
-
-        // Static - do not change
-            targetClass = 'button',
-            targetClass2 = 'footer-social-links a',
-            toggledElement = document.querySelectorAll('.' + targetClass +', .' + targetClass2);
-
-        // Toggles between CSS classOne and CSS classTwo
-        function classToggle() {
-
-            this.classList.toggle(classOne);
-            //this.classList.toggle(classTwo);
-        }
-
-        // Loop through list of matching elements and assign an Event Listener to each
-        for(var i = 0; i < toggledElement.length; i++) {
-            toggledElement[i].addEventListener('touchstart', classToggle, false);
-            toggledElement[i].addEventListener('touchend', classToggle, false);
-        }
-    }());
-
-
-
-})(window.app.srapp = window.app.srapp || {}, jQuery);
 
 $(document).ready(function() {
     app.srapp.init();
