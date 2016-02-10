@@ -591,16 +591,14 @@ var srapp = app.srapp || {};
                 // Iterate over all targets
                 jQuery.each(targets, function(i, val) {
 
-                    var targetClassName = 'flexsliderify' + i,
-                        target = $(this); // the specific instance of the widget to be manipulated
+                    var target = $(this); // the specific instance of the widget to be manipulated
 
                     // Init slider with variables
                     if (target.length > 0) {
-                        target.addClass(targetClassName);
 
                         srapp.util.configurator.buildConfigs(target, 'flexsliderify-options', srapp.widgets.flexsliderify);
 
-                        $('.' + targetClassName).flexslider(srapp.widgets.flexsliderify.configs);
+                        target.flexslider(srapp.widgets.flexsliderify.configs);
 
                     }
 
