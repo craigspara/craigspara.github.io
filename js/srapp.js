@@ -591,14 +591,16 @@ var srapp = app.srapp || {};
                 // Iterate over all targets
                 jQuery.each(targets, function(i, val) {
 
-                    var target = $(this); // the specific instance of the widget to be manipulated
+                    var targetClassName = 'flexsliderify' + i,
+                        target = $(this); // the specific instance of the widget to be manipulated
 
                     // Init slider with variables
                     if (target.length > 0) {
+                        target.addClass(targetClassName);
 
                         srapp.util.configurator.buildConfigs(target, 'flexsliderify-options', srapp.widgets.flexsliderify);
 
-                        target.flexslider(srapp.widgets.flexsliderify.configs);
+                        $('.' + targetClassName).flexslider(srapp.widgets.flexsliderify.configs);
 
                     }
 
@@ -679,18 +681,6 @@ var srapp = app.srapp || {};
 
 })(window.app.srapp = window.app.srapp || {}, jQuery);*/
 
-
-(function (srapp, $) {
-
-    "use strict";
-
-    var cached = {};
-
-    // Private functions
-
-
-
-})(window.app.srapp = window.app.srapp || {}, jQuery);
 
 
 
@@ -863,24 +853,12 @@ var srapp = app.srapp || {};
                             // Re-run on window resize
                             $(window).resize(function(){
 
-                                console.log('resize event fired');
                                 stretcher(options);
                             });
                         });
                     }
                 });
             }
-            /**
-             *
-             * @type {{modWindowWidth: *, modStretchTarget: (*|HTMLElement)}}
-             */
-            cached = {
-                //modWindowWidth: $('body').innerWidth(),
-                //modStretchTarget: $('.mod-stretchwide')
-            };
-
-
-
         }
     };
 
